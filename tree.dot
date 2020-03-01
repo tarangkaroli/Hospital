@@ -1,0 +1,6 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="A21 <= 0.49\ngini = 0.44\nsamples = 19511\nvalue = [20755, 10099]\nclass = Target", fillcolor="#f2be99"] ;
+1 [label="IV <= 0.1\ngini = 0.46\nsamples = 14812\nvalue = [14878, 8515]\nclass = Target", fillcolor="#f4c9aa"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;

@@ -65,11 +65,11 @@ for train_index, test_index in skf.split(indVarResc, target):
     classifier.fit(indVar_train, target_train)
     
     # create a random forest classifier
-    classifierRF = RandomForestClassifier(n_jobs=2, random_state=0)
+    classifierRF = RandomForestClassifier(n_jobs=2, random_state=1)
     classifierRF.fit(indVar_train, target_train)
     
     # create a Decision Tree Classifier
-    classifierDT = tree.DecisionTreeClassifier(n_estimators=10)
+    classifierDT = tree.DecisionTreeClassifier()
     classifierDT.fit(indVar_train, target_train)
     
     # store result from classification
@@ -86,17 +86,32 @@ print("Accuracy: " + round(accuracy*100).__str__() + "%")
 print("Classification Report: \n" + classReport.__str__())
 print("Confusion Matrix:\n" + confMatrix.__str__())
 
-print(classifierRF)
-
-correlations = dataset.corr()
+correlations = dataset.iloc[:, 1:-1].corr()
+print(correlations)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 cax = ax.matshow(correlations, vmin=-1, vmax=1)
 fig.colorbar(cax)
-plt.show()
+# plt.show()
 # The line/model
 # plt.scatter(indVarResc, target)
 # plt.xlabel('True Value')
 # plt.ylabel('Predictions')
 # plt.show()
 # export_graphviz(classifierDT, out_file ='tree.dot', feature_names =['Production Cost'])
+
+feature_name = list(dataset.columns)[1:-1]
+target_name = list(dataset.columns)[-1:]
+print(feature_name)
+print(target_name)
+
+estimator = classifierRF.estimators_[5]
+export_graphviz(estimator, out_file='tree.dot', 
+                feature_names = feature_name,
+                class_names = target_name,
+                rounded = True, proportion = False, 
+                precision = 2, filled = True)
+
+# Convert to png using system command (requires Graphviz)
+from subprocess import call
+call(['dot', '-Tpng', 'tree.dot', '-o', 'tree.png', '-Gdpi=600'])
